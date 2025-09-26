@@ -21,6 +21,7 @@ const LoginForm = () => {
 
   const [githubPending, startGithubTransition] = useTransition();
   const [googlePending, startGoogleTransition] = useTransition();
+  const [emailPending, startEmailTransition] = useTransition();
 
   const toggleVisibility = () => setIsVisible((prevState) => !prevState);
 
@@ -59,6 +60,24 @@ const LoginForm = () => {
     });
   }
 
+  function signInWithEmail() {
+    startEmailTransition(async () => {
+      await authClient.emailOtp.sendVerificationOtp({
+        email: email,
+        type: "sign-in",
+        fetchOptions: {
+          onSuccess: () => {
+            toast.success("Email sent");
+            router.push("/verify-otp");
+          },
+          onError: (error) => {
+            toast.error("Error send email");
+          },
+        },
+      });
+    });
+  }
+
   return (
     <div className="space-y-6">
       <div className="space-y-2">
@@ -73,7 +92,7 @@ const LoginForm = () => {
         />
       </div>
 
-      <div className="space-y-2">
+      {/* <div className="space-y-2">
         <div className="*:not-first:mt-2">
           <Label htmlFor="Password">Password</Label>
           <div className="relative">
@@ -99,7 +118,7 @@ const LoginForm = () => {
             </button>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="flex items-center justify-between">
         <div className="flex items-center text-sm space-x-2">
@@ -114,16 +133,28 @@ const LoginForm = () => {
         </Link>
       </div>
 
-      <Button className="w-full">
-        {" "}
-        <Send className="size-4" /> Continue
+      <Button
+        className="w-full"
+        onClick={signInWithEmail}
+        disabled={emailPending}
+      >
+        {emailPending ? (
+          <>
+            <Loader className="size-4 animate-spin" />
+            <span>Loading...</span>
+          </>
+        ) : (
+          <>
+            {" "}
+            <Send className="size-4" /> Continue
+          </>
+        )}
       </Button>
 
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="mt-6"
       >
         <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
           <span className="relative z-10 bg-card px-2 text-muted-foreground">
