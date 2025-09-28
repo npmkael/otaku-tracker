@@ -16,6 +16,10 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Loader } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
 
 export default function VerifyRequestPage() {
   const router = useRouter();
@@ -24,6 +28,24 @@ export default function VerifyRequestPage() {
   const params = useSearchParams();
   const email = params.get("email") as string;
   const isOtpValid = otp.length === 6;
+
+  function verifyOtp() {
+    startEmailPending(async () => {
+      await authClient.signIn.emailOtp({
+        email: email,
+        otp: otp,
+        fetchOptions: {
+          onSuccess: () => {
+            toast.success("Email Verified");
+            router.push("/");
+          },
+          onError: () => {
+            toast.error("Error Verifying Email/OTP");
+          },
+        },
+      });
+    });
+  }
 
   return (
     <>
@@ -38,9 +60,9 @@ export default function VerifyRequestPage() {
         </Link>
       </div>
 
-      <Card className="w-full mx-auto">
+      <Card className="max-w-lg md:w-full mx-auto">
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Please check your email</CardTitle>
+          <CardTitle className="text-xl">Enter confirmation code</CardTitle>
           <CardDescription>
             We have sent a verification code to your email address. Please open
             the email and paste the code below.
@@ -65,7 +87,25 @@ export default function VerifyRequestPage() {
                 <InputOTPSlot index={5} />
               </InputOTPGroup>
             </InputOTP>
+            <p className="text-sm text-muted-foreground">
+              Enter the 6-digit code sent to your email address
+            </p>
           </div>
+
+          <Button
+            onClick={verifyOtp}
+            className="w-full"
+            disabled={emailPending || !isOtpValid}
+          >
+            {emailPending ? (
+              <>
+                <Loader className="size-4 animate-spin" />
+                <span>Loading...</span>
+              </>
+            ) : (
+              "Verify Account"
+            )}
+          </Button>
         </CardContent>
       </Card>
     </>
