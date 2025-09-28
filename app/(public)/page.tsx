@@ -6,6 +6,7 @@ import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { Navbar } from "./_components/Navbar";
 
 export default function Home() {
   const { data: session } = authClient.useSession();
@@ -26,20 +27,8 @@ export default function Home() {
   }
 
   return (
-    <div className="text-2xl font-bold">
-      <ThemeToggle />
-      Root
-      {session ? (
-        <>
-          <div>Logged in: {session.user?.email}</div>
-          <Button onClick={signOut}>Sign out</Button>
-        </>
-      ) : (
-        <>
-          <div>Logged out</div>
-          <Link href="/login">Login</Link>
-        </>
-      )}
+    <div className="min-h-screen bg-background">
+      <Navbar />
     </div>
   );
 }
