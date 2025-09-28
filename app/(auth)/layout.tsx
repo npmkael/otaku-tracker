@@ -3,16 +3,25 @@
 import { ChevronLeft, Github, GithubIcon } from "lucide-react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import { useTheme } from "next-themes";
 
 export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { theme, resolvedTheme } = useTheme();
+
+  // Determine background image based on theme
+  const backgroundImage =
+    resolvedTheme === "dark" ? "/bg-auth-dark.gif" : "/bg-auth-light.gif";
+
+  // Prevent hydration mismatch by not rendering until theme is resolved
+  if (!resolvedTheme) {
+    return null;
+  }
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="relative overflow-hidden min-h-screen flex items-center justify-center p-4">
       <Link
         href="/"
         className="absolute top-6 left-6 z-20 text-muted-foreground hover:text-primary transition-colors duration-200 flex items-center space-x-2"
@@ -29,30 +38,20 @@ export default function AuthLayout({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="relative z-10 w-full max-w-md"
+        className="z-10 w-full max-w-6xl"
       >
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-block mb-6">
-            <div className="flex items-center justify-center space-x-2">
-              <div className="p-2 bg-primary/20 rounded-xl">
-                <Image src="/fav-icon.png" alt="logo" width={32} height={32} />
-              </div>
-            </div>
-          </Link>
-          <h1 className="text-3xl font-bold mb-2">Welcome back</h1>
-          <p className="text-muted-foreground">
-            Sign in to your account to continue
-          </p>
-        </div>
+        <div className="bg-transparent lg:bg-secondary/50 overflow-hidden rounded-[40px] shadow-4xl">
+          <div className="grid min-h-[700px] lg:grid-cols-2">
+            {/* Left Side */}
+            <div
+              className="brand-side relative m-4 rounded-3xl bg-cover p-12 hidden lg:block"
+              style={{ backgroundImage: `url('${backgroundImage}')` }}
+            />
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="bg-card backdrop-blur-xl border border-border rounded-2xl p-8"
-        >
-          {children}
-        </motion.div>
+            {/* Right Side */}
+            <div className="flex flex-col justify-center p-12">{children}</div>
+          </div>
+        </div>
       </motion.div>
     </div>
   );
