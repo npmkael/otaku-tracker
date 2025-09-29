@@ -3,8 +3,18 @@ import Image from "next/image";
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence, easeInOut } from "framer-motion";
-import { Menu, X, ArrowRight, Zap, Search } from "lucide-react";
+import {
+  Menu,
+  X,
+  ArrowRight,
+  Zap,
+  Search,
+  ArrowRightIcon,
+  SearchIcon,
+} from "lucide-react";
 import Link from "next/link";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface NavItem {
   name: string;
@@ -72,16 +82,12 @@ export const Navbar = () => {
   return (
     <>
       <motion.header
-        className={`fixed top-0 right-0 left-0 z-50 transition-all duration-500 ${
-          isScrolled
-            ? "border-border/50 bg-background/80 border-b shadow-sm backdrop-blur-md"
-            : "bg-transparent"
-        }`}
+        className="fixed top-0 right-0 left-0 z-50 transition-all duration-500 border-white/20 border-b shadow-sm bg-black/5 backdrop-blur-sm"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-6">
           <div className="flex h-16 items-center justify-between">
             {/* Logo Container */}
             <div className="flex items-center space-x-6">
@@ -105,7 +111,7 @@ export const Navbar = () => {
                   </div>
 
                   <div className="flex">
-                    <span className="text-lg text-foreground font-semibold">
+                    <span className="text-lg text-white font-semibold">
                       Kuroro
                     </span>
                   </div>
@@ -125,11 +131,11 @@ export const Navbar = () => {
                     <Link
                       prefetch={false}
                       href={item.href}
-                      className="text-foreground/80 hover:text-foreground relative rounded-lg px-4 py-2 text-sm  transition-colors duration-200"
+                      className="text-white hover:text-black relative rounded-lg px-4 py-2 text-sm  transition-colors duration-200"
                     >
                       {hoveredItem === item.name && (
                         <motion.div
-                          className="bg-muted absolute inset-0 rounded-lg"
+                          className="bg-white absolute inset-0 rounded-lg"
                           layoutId="navbar-hover"
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
@@ -153,17 +159,31 @@ export const Navbar = () => {
               className="hidden items-center space-x-3 lg:flex"
               variants={itemVariants}
             >
-              <motion.button
-                className="text-muted-foreground hover:bg-muted hover:text-foreground rounded-lg p-2 transition-colors duration-200"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Search className="h-5 w-5" />
-              </motion.button>
+              {/* Search Input */}
+              <div className="*:not-first:mt-2">
+                <div className="relative text-white">
+                  <Input
+                    id="search"
+                    className="peer ps-9 pe-9 bg-zinc-500/50 border-white/30 placeholder:text-white text-white"
+                    placeholder="Search"
+                    type="search"
+                  />
+                  <div className="text-white pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+                    <SearchIcon size={16} />
+                  </div>
+                  <button
+                    className="text-white hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                    aria-label="Submit search"
+                    type="submit"
+                  >
+                    <ArrowRightIcon size={16} aria-hidden="true" />
+                  </button>
+                </div>
+              </div>
               <Link
                 prefetch={false}
                 href="/login"
-                className="text-foreground/80 hover:text-foreground px-4 py-2 text-sm font-medium transition-colors duration-200"
+                className="text-white hover:text-white/80 px-4 py-2 text-sm font-medium transition-colors duration-200"
               >
                 Sign In
               </Link>
@@ -174,7 +194,7 @@ export const Navbar = () => {
                 <Link
                   prefetch={false}
                   href="/login"
-                  className="bg-foreground text-background hover:bg-foreground/90 inline-flex items-center space-x-2 rounded-lg px-5 py-2.5 text-sm font-medium shadow-sm transition-all duration-200"
+                  className="bg-white text-black hover:bg-white/90 inline-flex items-center space-x-2 rounded-lg px-5 py-2.5 text-sm font-medium shadow-sm transition-all duration-200"
                 >
                   <span>Get Started</span>
                   <ArrowRight className="h-4 w-4" />
@@ -183,7 +203,7 @@ export const Navbar = () => {
             </motion.div>
 
             <motion.button
-              className="text-foreground hover:bg-muted rounded-lg p-2 transition-colors duration-200 lg:hidden"
+              className="text-white hover:text-text hover:bg-muted rounded-lg p-2 transition-colors duration-200 lg:hidden"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               variants={itemVariants}
               whileTap={{ scale: 0.95 }}
