@@ -1,22 +1,26 @@
 "use client";
 
 import { Navbar } from "./_components/Navbar";
-import { HeroSection } from "./_components/Hero";
 import { CollectionCard } from "./_components/CollectionCard";
-import useSWR from "swr";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Bookmark } from "lucide-react";
 import Image from "next/image";
 import { SpecialAnimeCard } from "./_components/SpecialAnimeCard";
-import { LoadingPage } from "./_components/LoadingPage";
-import { defaultAnimeSchema } from "@/lib/jikanSchemas";
 import { useSpecialForYouAnime } from "@/lib/anime";
+import { TrendingSection } from "./_components/TrendingSection";
+import { Skeleton } from "@/components/ui/skeleton";
+import { MostPopularSection } from "./_components/MostPopularSection";
+import { Footer } from "./_components/Footer";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function Home() {
-  const { data, error, isLoading } = useSpecialForYouAnime([
+  const {
+    data: specialAnimeData,
+    error: specialAnimeError,
+    isLoading: specialAnimeLoading,
+  } = useSpecialForYouAnime([
     "Dandadan",
     "Solo Leveling",
     "The Water Magician",
@@ -24,12 +28,6 @@ export default function Home() {
     "Grand blue",
     "Kubo won't let me be invisible",
   ]);
-
-  if (isLoading) return <LoadingPage />;
-
-  if (error) return <div>Error</div>;
-
-  console.log(data);
 
   return (
     <main className="min-h-screen bg-background">
@@ -88,18 +86,29 @@ export default function Home() {
             </h2>
 
             <div className="relative grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 group/carousel">
-              {data &&
-                data.map((anime: any) => {
-                  return (
-                    <SpecialAnimeCard
-                      title={anime.title}
-                      year={anime.year}
-                      genre={anime.genres[0].name}
-                      image_url={anime.images.jpg.image_url}
-                      score={anime.score}
-                    />
-                  );
-                })}
+              {specialAnimeLoading || !specialAnimeData ? (
+                // Show skeleton loading cards
+                <>
+                  {[...Array(6)].map((_, i) => (
+                    <Skeleton key={i} className="aspect-[3/4] rounded-lg" />
+                  ))}
+                </>
+              ) : specialAnimeError ? (
+                <div className="col-span-full text-center text-muted-foreground">
+                  Error loading anime
+                </div>
+              ) : (
+                specialAnimeData.map((anime: any, index: number) => (
+                  <SpecialAnimeCard
+                    key={index}
+                    title={anime.title}
+                    year={anime.year}
+                    genre={anime.genres[0].name}
+                    image_url={anime.images.jpg.image_url}
+                    score={anime.score}
+                  />
+                ))
+              )}
 
               <button className="absolute top-1/2 -translate-y-1/2 -right-6 bg-foreground p-[12px] rounded-full cursor-pointer group-hover/carousel:opacity-100 opacity-0 transition-opacity duration-300">
                 <ArrowRight className="size-4 text-muted" />
@@ -112,7 +121,7 @@ export default function Home() {
       <div className="h-32 sm:h-40 md:h-48 lg:h-56"></div>
 
       {/* Featured Collections Section */}
-      <section className="bg-background py-16 mt-0">
+      <section className="py-16 mt-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-foreground mb-8">
             Featured Collections
@@ -146,6 +155,15 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Trending Anime Section */}
+      <TrendingSection />
+
+      {/* Most Popular Anime Section */}
+      <MostPopularSection />
+
+      {/* Footer Section */}
+      <Footer />
     </main>
   );
 }
