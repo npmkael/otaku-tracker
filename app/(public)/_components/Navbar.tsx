@@ -2,7 +2,7 @@
 import Image from "next/image";
 
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence, easeInOut } from "framer-motion";
+import { motion, AnimatePresence, easeInOut } from "motion/react";
 import {
   Menu,
   X,
@@ -14,7 +14,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 interface NavItem {
   name: string;
@@ -31,6 +32,7 @@ export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -131,22 +133,11 @@ export const Navbar = () => {
                     <Link
                       prefetch={false}
                       href={item.href}
-                      className="text-white hover:text-black relative rounded-lg px-4 py-2 text-sm  transition-colors duration-200"
-                    >
-                      {hoveredItem === item.name && (
-                        <motion.div
-                          className="bg-white absolute inset-0 rounded-lg"
-                          layoutId="navbar-hover"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          transition={{
-                            type: "spring",
-                            stiffness: 400,
-                            damping: 30,
-                          }}
-                        />
+                      className={cn(
+                        "text-muted-foreground hover:text-foreground relative rounded-lg px-4 py-2 text-sm  transition-colors duration-200",
+                        pathname === item.href && "text-foreground"
                       )}
+                    >
                       <span className="relative z-10">{item.name}</span>
                     </Link>
                   </motion.div>

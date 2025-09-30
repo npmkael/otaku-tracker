@@ -2,18 +2,9 @@
 
 import { Navbar } from "./_components/Navbar";
 import { CollectionCard } from "./_components/CollectionCard";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Bookmark } from "lucide-react";
-import Image from "next/image";
-import { DefaultAnimeCard } from "./_components/DefaultAnimeCard";
-import { useSpecialForYouAnime } from "@/lib/anime";
 import { TrendingSection } from "./_components/TrendingSection";
-import { Skeleton } from "@/components/ui/skeleton";
 import { MostPopularSection } from "./_components/MostPopularSection";
 import { Footer } from "./_components/Footer";
-import { useQuery } from "@tanstack/react-query";
-import { fetcher } from "@/lib/utils";
 import { HeroSection } from "./_components/HeroSection";
 
 export default function Home() {
