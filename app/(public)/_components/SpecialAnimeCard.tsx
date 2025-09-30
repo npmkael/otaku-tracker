@@ -3,9 +3,10 @@ import { Star, ThumbsDown, ThumbsUp } from "lucide-react";
 
 interface SpecialAnimeCardProps {
   title: string;
-  year: string;
+  year: number | null;
   genre: string;
   image_url: string;
+  score: number;
 }
 
 export const SpecialAnimeCard = ({
@@ -13,6 +14,7 @@ export const SpecialAnimeCard = ({
   year,
   genre,
   image_url,
+  score,
 }: SpecialAnimeCardProps) => {
   return (
     <div className="group cursor-pointer">
@@ -29,14 +31,14 @@ export const SpecialAnimeCard = ({
             {title}
           </h3>
           <p className="text-xs text-white/80">
-            {year}, {genre}
+            {year ?? "N/A"}, {genre}
           </p>
         </div>
 
         <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-zinc-800 py-2 px-4 rounded-br-lg rounded-bl-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <div className="flex gap-2 items-center">
             <Star className="size-3" />
-            <span className="text-sm">9.8</span>
+            <span className="text-sm">{score}</span>
           </div>
         </div>
 

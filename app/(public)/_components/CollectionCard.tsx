@@ -43,7 +43,7 @@ export const CollectionCard = ({ title, images }: CollectionCardProps) => {
           <div
             className="absolute w-40 h-60 rounded-xl overflow-hidden transition-all duration-300 group-hover:scale-105 -bottom-28 border-6 border-zinc-900"
             style={{
-              transform: `translateX(64px) translateY(16px) rotate(12deg)`,
+              transform: `translateX(64px) translateY(24px) rotate(12deg)`,
               zIndex: 11,
             }}
           >

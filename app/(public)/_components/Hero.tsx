@@ -1,10 +1,22 @@
+"use client";
+
+import useSWR from "swr";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Bookmark } from "lucide-react";
+import { ArrowRight, Bookmark } from "lucide-react";
 import Image from "next/image";
 import { SpecialAnimeCard } from "./SpecialAnimeCard";
+import { LoadingPage } from "./LoadingPage";
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export const HeroSection = () => {
+  const { data, error, isLoading } = useSWR(
+    "https://api.jikan.moe/v4/top/anime",
+    fetcher
+  );
+
+  if (isLoading) return <LoadingPage />;
   return (
     <section className="relative h-[70vh] sm:h-[75vh] md:h-[80vh] min-h-[500px]">
       <div className="absolute inset-0">
@@ -57,7 +69,7 @@ export const HeroSection = () => {
             Special For You
           </h2>
 
-          <div className="relative grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
+          <div className="relative grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 group/carousel">
             <SpecialAnimeCard
               title="To Your Eternity"
               year="2021"
@@ -94,6 +106,10 @@ export const HeroSection = () => {
               genre="Adventure"
               image_url="/dandadan-poster.webp"
             />
+
+            <button className="absolute top-1/2 -translate-y-1/2 -right-6 bg-foreground p-[12px] rounded-full cursor-pointer group-hover/carousel:opacity-100 opacity-0 transition-opacity duration-300">
+              <ArrowRight className="size-4 text-muted" />
+            </button>
           </div>
         </div>
       </section>
