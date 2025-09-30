@@ -1,4 +1,4 @@
-import useSWR from "swr";
+import { useQuery } from "@tanstack/react-query";
 import { defaultAnimeSchema } from "./jikanSchemas";
 
 const specialAnimeFetch = async (title: string) => {
@@ -15,9 +15,9 @@ const specialAnimeFetch = async (title: string) => {
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export function useSpecialForYouAnime(titles: string[]) {
-  const { data, error, isLoading } = useSWR(
-    titles.length > 0 ? ["anime-list", ...titles] : null,
-    async () => {
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["anime-list", ...titles],
+    queryFn: async () => {
       const results = [];
       // Fetch sequentially with 400ms delay between requests (respects 3 req/sec limit)
       for (const title of titles) {
@@ -29,8 +29,9 @@ export function useSpecialForYouAnime(titles: string[]) {
         }
       }
       return results;
-    }
-  );
+    },
+    enabled: titles.length > 0,
+  });
 
   return { data, error, isLoading };
 }

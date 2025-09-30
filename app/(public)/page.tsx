@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Bookmark } from "lucide-react";
 import Image from "next/image";
-import { SpecialAnimeCard } from "./_components/SpecialAnimeCard";
+import { DefaultAnimeCard } from "./_components/DefaultAnimeCard";
 import { useSpecialForYouAnime } from "@/lib/anime";
 import { TrendingSection } from "./_components/TrendingSection";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -99,7 +99,7 @@ export default function Home() {
                 </div>
               ) : (
                 specialAnimeData.map((anime: any, index: number) => (
-                  <SpecialAnimeCard
+                  <DefaultAnimeCard
                     key={index}
                     title={anime.title}
                     year={anime.year}
