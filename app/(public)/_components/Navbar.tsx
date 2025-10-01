@@ -16,6 +16,9 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { authClient } from "@/lib/auth-client";
+import { UserDropdown } from "./UserDropdown";
+import NotificationMenu from "./NotificationMenu";
 
 interface NavItem {
   name: string;
@@ -25,10 +28,13 @@ interface NavItem {
 const navItems: NavItem[] = [
   { name: "Home", href: "/" },
   { name: "Catalog", href: "/catalog" },
+  { name: "News", href: "/news" },
   { name: "Collections", href: "/about" },
 ];
 
 export const Navbar = () => {
+  const { data: session, isPending } = authClient.useSession();
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
@@ -171,26 +177,39 @@ export const Navbar = () => {
                   </button>
                 </div>
               </div>
-              <Link
-                prefetch={false}
-                href="/login"
-                className="text-white hover:text-white/80 px-4 py-2 text-sm font-medium transition-colors duration-200"
-              >
-                Sign In
-              </Link>
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <Link
-                  prefetch={false}
-                  href="/login"
-                  className="bg-white text-black hover:bg-white/90 inline-flex items-center space-x-2 rounded-lg px-5 py-2.5 text-sm font-medium shadow-sm transition-all duration-200"
-                >
-                  <span>Get Started</span>
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </motion.div>
+              {isPending ? null : session ? (
+                <>
+                  <UserDropdown
+                    email={session.user.email}
+                    image={session.user.image ?? ""}
+                    name={session.user.name}
+                  />
+                  <NotificationMenu />
+                </>
+              ) : (
+                <>
+                  <Link
+                    prefetch={false}
+                    href="/login"
+                    className="text-white hover:text-white/80 px-4 py-2 text-sm font-medium transition-colors duration-200"
+                  >
+                    Sign In
+                  </Link>
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Link
+                      prefetch={false}
+                      href="/login"
+                      className="bg-white text-black hover:bg-white/90 inline-flex items-center space-x-2 rounded-lg px-5 py-2.5 text-sm font-medium shadow-sm transition-all duration-200"
+                    >
+                      <span>Get Started</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </motion.div>
+                </>
+              )}
             </motion.div>
 
             <motion.button

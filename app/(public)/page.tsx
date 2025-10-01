@@ -9,9 +9,7 @@ import { HeroSection } from "./_components/HeroSection";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background">
-      <Navbar />
-
+    <>
       <HeroSection />
       {/* Add responsive spacing for the extended hero section */}
       <div className="h-32 sm:h-40 md:h-48 lg:h-56"></div>
@@ -59,7 +57,6 @@ export default function Home() {
       <MostPopularSection />
 
       {/* Footer Section */}
-      <Footer />
-    </main>
+    </>
   );
 }

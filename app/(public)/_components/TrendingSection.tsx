@@ -36,8 +36,9 @@ export const TrendingSection = () => {
               Error loading trending anime
             </div>
           ) : (
-            data?.data?.map((anime: any) => (
+            data?.data?.map((anime: any, index: number) => (
               <DefaultAnimeCard
+                key={index}
                 title={anime.title}
                 year={anime.year}
                 genre={anime.genres[0].name}
